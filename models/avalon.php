@@ -18,12 +18,24 @@ class Avalon extends BaseModel{
 		return $this->id;
 	}
 
+	public function setId($id){
+		$this->id = $id;
+	}
+
 	public function getPlayers(){
-		return $this->players;
+		return unserialize($this->players);
+	}
+
+	public function setPlayers($player){
+		$this->players = serialize($player);
 	}
 
 	public static function getCards(){
 		return $this->cards;
+	}
+
+	public function readGame($chat_id){
+		return Card::select();
 	}
 
 

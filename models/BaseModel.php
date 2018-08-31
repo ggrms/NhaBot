@@ -12,7 +12,7 @@
         public static function buildQuery($action, $table_name, $attributes, $condition){
             switch ($action) {
                 case 'insert':
-                    unset($attributes['id']);
+                    //unset($attributes['id']);
                     $query = "INSERT INTO `".$table_name."` (`".implode("`, `", $attributes)."`) VALUES (". ":".implode(", :", $attributes).")";
                     break;
 
@@ -55,7 +55,7 @@
         public static function bindValues($action, $stmt, $attributes, $condition){
 			switch ($action) {
 				case 'insert':
-					unset($attributes['id']);
+					//unset($attributes['id']);
 					foreach($attributes as $attribute => $value){
 						if(is_numeric($value)){
 							$stmt->BindValue(":".$attribute, $value, PDO::PARAM_INT);
@@ -204,7 +204,7 @@
                         unset($arr[$key]);
                     }
                 }
-                unset($arr['id']);
+                //unset($arr['id']);
                 return $arr;
             }
             else {

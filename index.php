@@ -10,39 +10,40 @@ define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 $update_response = file_get_contents("php://input");
 $update = json_decode($update_response, true);
 
+/*$update_response = file_get_contents(API_URL."getupdates");
+$response = json_decode($update_response, true);
+$length = count($response["result"]);
+
+$update = $response["result"][$length-1];*/
+
 if (isset($update["message"])) {
   processMessage($update["message"]);
 }
 
 //Join Button or Start Button
 if(!empty($update['callback_query'])){
-  if($update['callback_data'] == "start"){
-
+  $data = explode(" ", $update['callback_query']['data']);
+  $chat_id = $data[0];
+  if($data[1] == "start"){
+    sendMessage("sendMessage", array('chat_id' => $chat_id, 'text' => 'Começar Jogo'));
   }
   else{
     $avalon = Avalon::readGame($chat_id)[0];
-    $data = explode(" ", $update['callback_query']['data']);
-    $chat_id = $data[0];
     $username = $update['callback_query']['from'];
-    if(in_array($username['first_name'] . " " . $username['last_name'] . ":" . $username['id'],$avalon->getPlayers())){
+    $players = $avalon->getPlayers();
+    if(!$players){
+      $players = array();
+    }
+    var_dump($players);
+    if(in_array($username['first_name'] . " " . $username['last_name'] . ":" . $username['id'],$players)){
       sendMessage("sendMessage", array('chat_id' => $chat_id, 'text' => $username['first_name'] . ' você já está no jogo!'));
     }
     else{
       sendMessage("sendMessage", array('chat_id' => $chat_id, 'text' => $username['first_name'] . ' juntou-se ao jogo!'));
-      if($avalon->getPlayers() == null){
-        $players = array();
         array_push($players,$username['first_name'] . " " . $username['last_name'] . ":" . $username['id']);
-        //$avalon->setPlayers($players);
         $avalon->atualizar($chat_id, serialize($players));
-      } else{
-        $players = $avalon->getPlayers();
-        array_push($players,$username['first_name'] . " " . $username['last_name'] . ":" . $username['id']);
-        //$avalon->setPlayers($players);
-        $avalon->atualizar($chat_id, serialize($players));
-      }
     }
   }
-  sendMessage("answerCallbackQuery", array('callback_query_id' => $update['callback_query']['id']));
 }
 
 function sendMessage($method, $parameters) {
@@ -65,10 +66,10 @@ function processMessage($message) {
 
   if (isset($message['text'])) {
 
-    $text = $message['text'];//texto recebido na mensagem
+    $text = $message['text'];
 
     if (strpos($text, "/eu") === 0 && $message['from']['first_name'] == "Lucas") {
-		//envia a mensagem ao usuário
+
       sendMessage("sendMessage", array('chat_id' => $chat_id, "text" => 'Todo mundo sabe que todo Lucas é otário'));
   	}
   	else if(strpos($text, "/eu") === 0 && $message['from']['first_name'] == "Natália"){
@@ -92,19 +93,23 @@ function processMessage($message) {
           sendMessage("sendMessage",array('chat_id' => $chat_id, "text" => 'Já existe um jogo em andamento. Por favor aguarde o fim do jogo ou que o criador do jogo termine o jogo!'));  
       }
       else{
-        Avalon::create($chat_id);
-    		$keyboard = [
-  		    'inline_keyboard' => [
-  		        [
+        $keyboard = [
+          'inline_keyboard' => [
+              [
                   ['text' => 'Entrar no Jogo', 'callback_data' => $chat_id . ' ' . $message['from']['first_name']],
-                  ['text' => 'Começar Jogo', 'callback_data' => "start"]
-  		        ]
-  		    ]
-  		  ];
-  		$keyboard = json_encode($keyboard);
-    		sendMessage("sendMessage",array('chat_id' => $chat_id, "text" => 'Um jogo de avalon foi iniciado. Clique no botão para juntar-se!', 'reply_markup' => $keyboard));
+                  ['text' => 'Começar Jogo', 'callback_data' => $chat_id . ' ' . "start"]
+              ]
+          ]
+        ];
+      $keyboard = json_encode($keyboard);
+        sendMessage("sendMessage",array('chat_id' => $chat_id, "text" => 'Um jogo de avalon foi iniciado. Clique no botão para juntar-se!', 'reply_markup' => $keyboard));
       }
-      $text = "-10932939";
+      try{
+        Avalon::create($chat_id);
+      } catch (PDOException $e){
+        sendMessage("sendMessage",array('chat_id' => $chat_id, "text" => 'Ocorreu um erro ao tentar criar o jogo. Tente novamente.'));
+      }
+      
   	}
   	else if(strpos($text, "/avaloncards") === 0){
   		$cards = Card::select();

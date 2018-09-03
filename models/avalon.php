@@ -52,7 +52,7 @@ class Avalon extends BaseModel{
 				echo $e->getMessage();
 				exit();
 			}
-			header("Location: index.php");
+			//header("Location: index.php");
 		}
 	}
 
@@ -68,7 +68,7 @@ class Avalon extends BaseModel{
 				echo $e->getMessage();
 				exit();
 			}
-			header("Location: index.php");
+			//header("Location: index.php");
 		}
 	}
 
@@ -82,7 +82,7 @@ class Avalon extends BaseModel{
 					exit();
 				}
 			}
-			header("Location: index.php");
+			//header("Location: index.php");
 		}
 
 }

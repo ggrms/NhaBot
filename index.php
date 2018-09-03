@@ -34,7 +34,6 @@ if(!empty($update['callback_query'])){
     if(!$players){
       $players = array();
     }
-    var_dump($players);
     if(in_array($username['first_name'] . " " . $username['last_name'] . ":" . $username['id'],$players)){
       sendMessage("sendMessage", array('chat_id' => $chat_id, 'text' => $username['first_name'] . ' você já está no jogo!'));
     }

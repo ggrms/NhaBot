@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 require_once dirname(__FILE__).'/models/avalon.php';
 require_once dirname(__FILE__).'/models/card.php';
 require_once dirname(__FILE__).'/models/configs.php';
+require_once dirname(__FILE__).'/models/game.php';
 
 define('BOT_TOKEN', 'token');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
@@ -30,6 +31,10 @@ if(!empty($update['callback_query'])){
   if($data[1] == "config"){
     $config = new Config();
     $config->configuration($update);
+  }
+  else if($data[1] == "game"){
+    $game = new Game();
+    $game->play($update);
   }
   else{
     $avalon = Avalon::readGame($chat_id)[0];

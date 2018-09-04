@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__).'/card.php';
 require_once dirname(__FILE__).'/avalon.php';
+require_once dirname(__FILE__).'/game.php';
 
 class Config {
 
@@ -55,6 +56,8 @@ class Config {
 		  		if(sizeof($players) >= 5 && sizeof($players) == sizeof($cards)){
 		  			self::sendAction("sendMessage", array('chat_id' => $game_id, "text" => "O jogo irá começar em instantes!"));
 		  			//call game object
+		  			$game = new Game();
+		  			$game->showConfigs($players,$cards, $game_id);
 		  		}
 		  		else{
 		  			self::sendAction("sendMessage", array('chat_id' => $chat_id, "text" => "O número de jogadores precisa ser maior ou igual a 5, e o número de cartas precisa ser igual ao número de jogadores!!"));

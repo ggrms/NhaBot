@@ -26,12 +26,8 @@ class Avalon extends BaseModel{
 		return unserialize($this->players);
 	}
 
-	public function setPlayers($player){
-		$this->players = serialize($player);
-	}
-
-	public static function getCards(){
-		return $this->cards;
+	public function getCards(){
+		return unserialize($this->cards);
 	}
 
 	public static function readGame($chat_id=null){
@@ -52,8 +48,8 @@ class Avalon extends BaseModel{
 				echo $e->getMessage();
 				exit();
 			}
-			//header("Location: index.php");
 		}
+		//header("Location: configs.php");
 	}
 
 	public static function atualizar($chat_id, $players=null, $cards=null){
@@ -68,7 +64,6 @@ class Avalon extends BaseModel{
 				echo $e->getMessage();
 				exit();
 			}
-			//header("Location: index.php");
 		}
 	}
 
@@ -82,7 +77,6 @@ class Avalon extends BaseModel{
 					exit();
 				}
 			}
-			//header("Location: index.php");
 		}
 
 }

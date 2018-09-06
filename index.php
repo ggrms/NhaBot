@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/models/card.php';
 require_once dirname(__FILE__).'/models/configs.php';
 require_once dirname(__FILE__).'/models/game.php';
 
-define('BOT_TOKEN', 'token');
+define('BOT_TOKEN', '629842205:AAGhoMsxhU_GsDW0fUKykSxlI1qxmKAqOrI');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 
 //$update_response = file_get_contents("php://input");
@@ -41,6 +41,7 @@ if(!empty($update['callback_query'])){
     $username = $update['callback_query']['from'];
     $cards = $avalon->getCards();
     $players = $avalon->getPlayers();
+    $total = $avalon->getTotal();
     if(!$cards){
       $cards = array();
     }
@@ -53,7 +54,11 @@ if(!empty($update['callback_query'])){
     else{
       sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => $username['first_name'] . ' juntou-se ao jogo!'));
         array_push($players,$username['first_name'] . " " . $username['last_name'] . ":" . $username['id']);
-        $avalon->atualizar($chat_id, serialize($players), serialize($cards));
+        $att['avalon']['id'] = $chat_id;
+        $att['avalon']['players'] = serialize($players);
+        $att['avalon']['cards'] = serialize($cards);
+        $att['avalon']['total'] = $total+1;
+        $avalon->atualizar($att);
     }
   }
 }

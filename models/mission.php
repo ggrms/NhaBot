@@ -2,24 +2,22 @@
 require_once 'BaseModel.php';
 require_once 'mission.php';
 
-class Avalon extends BaseModel{
+class Mission extends BaseModel{
 	private $id;
+	private $game_id;
 	private $players;
 	private $cards;
-	private $total;
 	private $result;
-	private $startedGame;
-	private $currentMission;
+	private $success;
 
 	function __construct($attributes = NULL){
 		if($attributes) {
 			$this->id = empty($attributes['id']) ? null : $attributes['id'];
+			$this->game_id = empty($attributes['id']) ? null : $attributes['id'];
 			$this->players = empty($attributes['players']) ? null : $attributes['players'];
 			$this->cards = empty($attributes['cards']) ? null : $attributes['cards'];
-			$this->total = empty($attributes['total']) ? null : $attributes['total'];
 			$this->result = empty($attributes['result']) ? null : $attributes['result'];
-			$this->startedGame = empty($attributes['startedGame']) ? null : $attributes['startedGame'];
-			$this->currentMission = empty($attributes['currentMission']) ? null : $attributes['currentMission'];
+			$this->success = empty($attributes['success']) ? null : $attributes['success'];
 		}
 	}
 
@@ -31,6 +29,10 @@ class Avalon extends BaseModel{
 		$this->id = $id;
 	}
 
+	public function getGame_id(){
+		return $this->game_id;
+	}
+
 	public function getPlayers(){
 		return unserialize($this->players);
 	}
@@ -39,36 +41,23 @@ class Avalon extends BaseModel{
 		return unserialize($this->cards);
 	}
 
-	public function getTotal(){
-		return $this->total;
-	}
-
 	public function getResult(){
 		return $this->result;
 	}
 
-	public function getstartedGame()){
-		return $this->startedGame;
+	public function getSuccess(){
+		return $this->success;
 	}
 
-	public function getCurrentMission(){
-		return $this->currentMission;
+	public static function readMission($game_id){
+		return Mission::select(['game_id' => $game_id]);
 	}
 
-	public static function readGame($chat_id=null){
-		return Avalon::select($chat_id);
-	}
-
-	public static function readCards($chat_id){
-		return Card::select($chat_id);
-	}
-
-	public static function create($chat_id){
-		$att['avalon']['id'] = $chat_id;
-		if(!isset($_POST['avalon']['id'])){
-			$avalon = new Avalon($att['avalon']);
+	public static function create($att){
+		if(!isset($_POST['mission']['id'])){
+			$mission = new Mission($att['mission']);
 			try {
-				$avalon->insert();
+				$mission->insert();
 			} catch (PDOException $e) {
 				echo $e->getMessage();
 				exit();
@@ -77,10 +66,10 @@ class Avalon extends BaseModel{
 	}
 
 	public static function atualizar($att){
-		if(!empty($att['avalon']['id'])){
-			$avalon = new Avalon($att['avalon']);
+		if(!empty($att['mission']['id'])){
+			$mission = new Mission($att['mission']);
 			try {
-				$avalon->update();
+				$mission->update();
 			} catch (PDOException $e) {
 				echo $e->getMessage();
 				exit();
@@ -91,7 +80,7 @@ class Avalon extends BaseModel{
 	public static function delete($id) {
 			if(!empty($id)) {
 				try {
-					Avalon::delete(['id' => $id]);
+					Mission::delete(['id' => $id]);
 				}
 				catch (PDOException $e) {
 					echo $e->getMessage();

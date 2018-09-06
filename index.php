@@ -9,14 +9,14 @@ require_once dirname(__FILE__).'/models/game.php';
 define('BOT_TOKEN', '629842205:AAGhoMsxhU_GsDW0fUKykSxlI1qxmKAqOrI');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 
-//$update_response = file_get_contents("php://input");
-//$update = json_decode($update_response, true);
+$update_response = file_get_contents("php://input");
+$update = json_decode($update_response, true);
 
-$update_response = file_get_contents(API_URL."getupdates");
+/*$update_response = file_get_contents(API_URL."getupdates");
 $response = json_decode($update_response, true);
 $length = count($response["result"]);
 
-$update = $response["result"][$length-1];
+$update = $response["result"][$length-1];*/
 
 //var_dump($update);
 

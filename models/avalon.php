@@ -47,7 +47,7 @@ class Avalon extends BaseModel{
 		return $this->result;
 	}
 
-	public function getstartedGame()){
+	public function getstartedGame(){
 		return $this->startedGame;
 	}
 

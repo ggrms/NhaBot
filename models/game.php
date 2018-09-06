@@ -3,7 +3,7 @@ require_once dirname(__FILE__).'/card.php';
 require_once dirname(__FILE__).'/avalon.php';
 require_once dirname(__FILE__).'/mission.php';
 
-class Config {
+class Game {
 
 	public static function sendAction($method, $parameters) {
 	  $options = array(
@@ -21,11 +21,11 @@ class Config {
 	public function showConfigs($players,$cards, $game_id){
 		$ordem = 0;
 		$message = "Esses é a ordem de Jogo: ";
-		foreach($player in $players){
+		foreach($player as $players){
 			$player = explode(":", $player);
 			$message += $player[0] . ", ";
 		}
-		$message = " e essas são as cartas escolhidas: "
+		$message = " e essas são as cartas escolhidas: ";
 		for($x = 0;$x<sizeof($cards);$x++){
 			if($x == sizeof($cards)-1){
 				$message += $cards[$x];
@@ -86,14 +86,14 @@ class Config {
 						$key = array_search($data[4],$players);
 						unset($players[$key]);
 				      	sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => $player[0] . ' foi removido da missão!'));
-				        $att['mission']['players'] = $players
+				        $att['mission']['players'] = $players;
 				        $mission->atualizar($att);
 				    }
 				    else{
 				    	$player = explode(":", $data[4]);
 				        array_push($players,$data[4]);
 				      	sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => $player[0] . ' foi colocado na missão!'));
-				        $att['mission']['players'] = $players
+				        $att['mission']['players'] = $players;
 				        $mission->atualizar($att);
 				    }    	
 			    }

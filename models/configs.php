@@ -57,6 +57,7 @@ class Config {
 		  			self::sendAction("sendMessage", array('chat_id' => $game_id, "text" => "O jogo irá começar em instantes!"));
 		  			//call game object
 		  			$game = new Game();
+		  			self::sendAction("deleteMessage", array('chat_id' => $chat_id, "message_id" => $button['callback_query']['inline_message_id']))
 		  			$game->showConfigs($players,$cards, $game_id);
 		  		}
 		  		else{
@@ -76,9 +77,12 @@ class Config {
 			      self::sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => $data[4] . ' já está no jogo!'));
 			    }
 			    else {
-			    	self::sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => 'a carta ' . $data[4] . ' foi inserida ao jogo!'));
 			        array_push($cards,$data[4]);
-			        $avalon->atualizar($game_id, serialize($avalon->getPlayers()), serialize($cards));
+			        $att['avalon']['id'] = $avalon->getId();
+			        $att['avalon']['players'] = serialize($avalon->getPlayers());
+			        $att['avalon']['cards'] = serialize($cards);
+			        $avalon->atualizar($att);
+			    	self::sendAction("sendMessage", array('chat_id' => $chat_id, 'text' => 'a carta ' . $data[4] . ' foi inserida ao jogo!'));
 			    }
 		  	}
 		}

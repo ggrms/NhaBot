@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/models/card.php';
 require_once dirname(__FILE__).'/models/configs.php';
 require_once dirname(__FILE__).'/models/game.php';
 
-define('BOT_TOKEN', '629842205:AAGhoMsxhU_GsDW0fUKykSxlI1qxmKAqOrI');
+define('BOT_TOKEN', 'token');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 
 $update_response = file_get_contents("php://input");

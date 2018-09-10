@@ -9,16 +9,14 @@ require_once dirname(__FILE__).'/models/game.php';
 define('BOT_TOKEN', 'token');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 
-$update_response = file_get_contents("php://input");
-$update = json_decode($update_response, true);
+//$update_response = file_get_contents("php://input");
+//$update = json_decode($update_response, true);
 
-/*$update_response = file_get_contents(API_URL."getupdates");
+$update_response = file_get_contents(API_URL."getupdates");
 $response = json_decode($update_response, true);
 $length = count($response["result"]);
 
-$update = $response["result"][$length-1];*/
-
-//var_dump($update);
+$update = $response["result"][$length-1];
 
 if (isset($update["message"])) {
   processMessage($update["message"]);
@@ -75,6 +73,9 @@ function sendAction($method, $parameters) {
 	$context  = stream_context_create( $options );
 	file_get_contents(API_URL.$method, false, $context );
 }
+
+
+
 
 function processMessage($message) {
   // processa a mensagem recebida

@@ -10,6 +10,7 @@ class Avalon extends BaseModel{
 	private $result;
 	private $startedGame;
 	private $currentMission;
+	private $ordem;
 
 	function __construct($attributes = NULL){
 		if($attributes) {
@@ -20,6 +21,7 @@ class Avalon extends BaseModel{
 			$this->result = empty($attributes['result']) ? null : $attributes['result'];
 			$this->startedGame = empty($attributes['startedGame']) ? null : $attributes['startedGame'];
 			$this->currentMission = empty($attributes['currentMission']) ? null : $attributes['currentMission'];
+			$this->ordem = empty($attributes['ordem']) ? null : $attributes['ordem'];
 		}
 	}
 
@@ -53,6 +55,10 @@ class Avalon extends BaseModel{
 
 	public function getCurrentMission(){
 		return $this->currentMission;
+	}
+
+	public function getOrdem(){
+		return $this->ordem;
 	}
 
 	public static function readGame($chat_id=null){

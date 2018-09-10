@@ -57,7 +57,8 @@ class Config {
 		  			self::sendAction("sendMessage", array('chat_id' => $game_id, "text" => "O jogo irá começar em instantes!"));
 		  			//call game object
 		  			$game = new Game();
-		  			self::sendAction("deleteMessage", array('chat_id' => $chat_id, "message_id" => $button['callback_query']['inline_message_id']))
+					$msg = $button['callback_query']['message'];
+		  			//self::sendAction("deleteMessage", array('chat_id' => $chat_id, "message_id" => $msg['message_id']));
 		  			$game->showConfigs($players,$cards, $game_id);
 		  		}
 		  		else{

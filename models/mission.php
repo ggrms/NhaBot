@@ -13,7 +13,7 @@ class Mission extends BaseModel{
 	function __construct($attributes = NULL){
 		if($attributes) {
 			$this->id = empty($attributes['id']) ? null : $attributes['id'];
-			$this->game_id = empty($attributes['id']) ? null : $attributes['id'];
+			$this->game_id = empty($attributes['game_id']) ? null : $attributes['game_id'];
 			$this->players = empty($attributes['players']) ? null : $attributes['players'];
 			$this->cards = empty($attributes['cards']) ? null : $attributes['cards'];
 			$this->result = empty($attributes['result']) ? null : $attributes['result'];
@@ -50,7 +50,7 @@ class Mission extends BaseModel{
 	}
 
 	public static function readMission($game_id){
-		return Mission::select(['game_id' => $game_id]);
+		return Mission::select('game_id',$game_id);
 	}
 
 	public static function create($att){
@@ -80,7 +80,7 @@ class Mission extends BaseModel{
 	public static function delete($id) {
 			if(!empty($id)) {
 				try {
-					Mission::delete(['id' => $id]);
+					mission::delete(['id' => $id]);
 				}
 				catch (PDOException $e) {
 					echo $e->getMessage();

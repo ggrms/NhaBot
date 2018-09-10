@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/mission.php';
 
 class Game {
 
+
 	public static function sendAction($method, $parameters) {
 	  $options = array(
 	  	'http' => array(
@@ -19,51 +20,58 @@ class Game {
 	}
 
 	public function showConfigs($players,$cards, $game_id){
-		$ordem = 0;
 		$message = "Esses é a ordem de Jogo: ";
-		foreach($player as $players){
+		foreach($players as $player){
 			$player = explode(":", $player);
-			$message += $player[0] . ", ";
+			$message = $message . ' ' . $player[0] . ", ";
 		}
-		$message = " e essas são as cartas escolhidas: ";
+		$message = $message . " e essas são as cartas escolhidas: ";
 		for($x = 0;$x<sizeof($cards);$x++){
 			if($x == sizeof($cards)-1){
-				$message += $cards[$x];
+				$message = $message . $cards[$x];
 			}
 			else{
-				$message += $cards[$x] . ", ";
+				$message = $message . $cards[$x] . ", ";
 			}
 		}
 		self::sendAction("sendMessage", array('chat_id' => $game_id, 'text' => $message));
 		self::sendAction("sendMessage", array('chat_id' => $game_id, 'text' => "Estarei enviando uma mensagem ao jogador da vez para que ele possa decidir qual time irá para a missão. Logo em seguida mandarei mensagem a todos os jogadores para que possam decidir se aceitam ou não."));
-		self::start();
+		//colocar status como started
+		self::start($game_id,$players);
 	}
 
 	public static function start($game_id){
 		$avalon = Avalon::readGame($game_id)[0];
+		$ordem = $avalon->getOrdem();
+		$players = $avalon->getPLayers();
+		$missioncount = $avalon->getCurrentMission();
+		$att['avalon']['id'] = $avalon->getId();
+		$att['avalon']['startedGame'] = true;
 		//Criar missão de acordo com numero de players e mencionar quantas pessoas em cada missão de acordo com o numero de jogadores
 		$att['mission']['game_id'] = $game_id;
-		$mission = Mission::create($att);
-		$missioncount = $avalon->getCurrentMission();
+		Mission::create($att);
 		$player = $players[$ordem++];
+		$att['avalon']['ordem'] = $ordem;
+		$avalon->atualizar($att);
 		$player = explode(":",$player);
 		$player_id = $player[1];
 		$player_name = $player[0];
-  		if($avalon->getTotal() == 5){
+		$mission = Mission::readMission($game_id)[$missioncount];
+		$total = $avalon->getTotal();
+  		if($total == 5){
   			if($missioncount == 0){
 				$options = array('inline_keyboard' => array());
 				array_push($options['inline_keyboard'], array());
 				$x = 0;
-				foreach($p as $players){
+				foreach($players as $p){
 					$p = explode(":", $p);
 		  			if(sizeof($options['inline_keyboard'][$x]) > 1){
 		  				array_push($options['inline_keyboard'], array());
 		  				$x++;
 		  			}
 		  			//Adicionar Ao banco a classe MISSÃO e adicionar os jogadores escolhidos a missão.
-		  			array_push($options['inline_keyboard'][$x],array('text' => $p[0], 'callback_data' => $chat_id . ' ' . 'game' . ' ' . 'add' . ' ' . $game_id . ' ' .  $p[0] . ':' . $p[1]. ' ' . $mission->getId() . ' ' . $total-3));
+		  			array_push($options['inline_keyboard'][$x],array('text' => $p[0], 'callback_data' => $player_id . ' ' . 'game' . ' ' . 'add' . ' ' . $game_id . ' ' .  $p[0] . ':' . $p[1]. ' ' . $mission->getId() . ' ' . ($total-3)));
 		  		}
-  				
   			}
   		}
 
